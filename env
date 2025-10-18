@@ -1,0 +1,9 @@
+#Configurar dependiendo de los datos de su conexion
+
+database.default.hostname = localhost
+database.default.database =
+database.default.username = 
+database.default.password = 
+database.default.DBDriver = MySQLi
+database.default.DBPrefix =
+database.default.port = 3306
