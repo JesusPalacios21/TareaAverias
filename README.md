@@ -1,68 +1,126 @@
-# CodeIgniter 4 Application Starter
+# ⚙️ Sistema de Gestión de Averías en Tiempo Real
 
-## What is CodeIgniter?
+Proyecto desarrollado con **CodeIgniter 4**, **Ratchet WebSocket** y **MySQL** que permite registrar, visualizar y actualizar averías de manera **dinámica y en tiempo real**.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+Los clientes pueden registrar averías, y los técnicos reciben notificaciones instantáneas mediante WebSockets cuando se crea o se soluciona una avería.
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+---
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## 🧩 Características principales
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- Registro de averías con cliente, descripción y fecha/hora.
+- Listado de averías pendientes tanto para **clientes** como **técnicos**.
+- Actualización en tiempo real sin recargar la página (gracias a **Ratchet WebSocket**).
+- Opción para que los técnicos marquen averías como **solucionadas**.
+- Arquitectura limpia usando **MVC (CodeIgniter 4)**.
+- Migraciones y seeds para creación automática de la base de datos.
 
-## Installation & updates
+---
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+## 🛠️ Tecnologías utilizadas
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+- PHP 8+
+- [CodeIgniter 4](https://codeigniter.com/)
+- [Ratchet WebSocket](http://socketo.me/)
+- MySQL
+- Composer
+- HTML, CSS (Bootstrap opcional)
 
-## Setup
+---
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+## ⚙️ Requisitos previos
 
-## Important Change with index.php
+Antes de comenzar, asegúrate de tener instalado:
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+- PHP 8 o superior  
+- Composer  
+- MySQL  
+- XAMPP, Laragon o entorno similar  
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+---
 
-**Please** read the user guide for a better explanation of how CI4 works!
+## 💾 Configuración de la base de datos
 
-## Repository Management
+Ejecuta los siguientes comandos en tu cliente MySQL o phpMyAdmin:
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+```sql
+CREATE DATABASE wowdb;
+USE wowdb;
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+SELECT * FROM averias;
+```
 
-## Server Requirements
+Luego no te olvides de configurar tus credenciales en el archivo env
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+## Instalación del proyecto
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+Sigue los pasos en orden:
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+### 1️⃣ Clonar el repositorio
+```
+git clone https://github.com/tuusuario/tu-repo.git
+cd tu-repo
+```
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+### 2️⃣ Instalar dependencias
+```
+composer install
+```
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+### 3️⃣ Ejecutar migraciones
+
+Esto creará la tabla averias automáticamente.
+```
+php spark migrate
+```
+
+### 4️⃣ Cargar datos de ejemplo (seeds)
+
+Esto insertará registros de prueba.
+```
+php spark db:seed AveriasSeeder
+```
+
+## ⚡ Ejecución del sistema
+### 1️⃣ Iniciar el servidor WebSocket
+
+Esto habilita las notificaciones en tiempo real.
+```
+php socket-server.php
+```
+
+Verás un mensaje como:
+```
+Servidor WebSocket iniciado en puerto 8080
+```
+
+💻 Uso del sistema
+
+Registrar una avería:
+```
+👉 http://averias/registrar
+```
+
+Ver listado (clientes):
+```
+👉 http://averias/listar/clientes
+```
+
+Ver listado (técnicos):
+```
+👉 http://averias/listar/tecnicos
+```
+Cuando un cliente registra una nueva avería, todos los técnicos conectados verán la actualización al instante sin recargar la página.
+
+Si un técnico marca una avería como solucionada, desaparece automáticamente del listado de clientes.
+
+## 🧩 Roles del sistema
+### Rol	Descripción
+Cliente	Registra nuevas averías y visualiza las pendientes.
+Técnico	Visualiza averías en tiempo real y las marca como solucionadas.
+### 📸 Vistas principales
+Registrar Avería: formulario simple con campos de cliente, problema y fecha/hora.
+
+Listado de Averías: tabla con actualización en tiempo real vía WebSocket.
+
+### No te olvides probar el proyecto en diferentes navegadores para ver el punto del trabajo...
